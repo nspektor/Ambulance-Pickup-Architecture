@@ -29,5 +29,7 @@ Running this line should result in a total score of 26 and output showing who wa
 You can also try out running with `sample_wrong_result` to see the various kinds of error messages the validator produces.
 
 ## How do I send in the code?
-Please send me (ns104@nyu.edu) a zip file by 12pm on Monday with your code and a `README.md` detailing how I should run/compile it. 
+Please send me (ns104@nyu.edu) a zip file by 12pm on Monday with your code and shell script that compiles and runs your code.
 Your solution should expect a command line argument with the name of the data file and should output a result file with your solution.
+I should be able to run: `python3 run.py your_shell_script.sh input_data.txt` and have your code generate a result file 
+called: `result.txt` which I will then pass into `validator.py` to determine your score

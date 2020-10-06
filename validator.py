@@ -80,7 +80,7 @@ class Hospital:
         self.ambulance_time[t] += 1
         return
 
-    def rescue(self, people_on_ambulance, hospitals):
+    def rescue(self, people_on_ambulance, hospitals, end_hospital):
         if 4 < len(people_on_ambulance):
             raise IllegalPlanError('Cannot rescue more than four people at once: %s' % people_on_ambulance)
         already_rescued = [p for p in people_on_ambulance if p.rescued]
@@ -96,17 +96,7 @@ class Hospital:
             t += 1  # add 1 minute for loading the person
             curr_location = p
         # look for closest hospital to return to
-        closest_hospital = 0
-        travel_time_to_closest_hospital = None
-        for hosp in hospitals:
-            temp_dist = travel_time(curr_location, hosp)
-            if not travel_time_to_closest_hospital:
-                travel_time_to_closest_hospital = temp_dist
-                closest_hospital = hosp
-            elif temp_dist < travel_time_to_closest_hospital:
-                travel_time_to_closest_hospital = temp_dist
-                closest_hospital = hosp
-        t += travel_time_to_closest_hospital
+        t += travel_time(curr_location, end_hospital)
         t += 1  # add time for unloading up to 4 people
 
         # check if there are any people on the ambulance that wont make it in time
@@ -123,7 +113,7 @@ class Hospital:
         for p in people_on_ambulance:
             p.rescued = True
         print('Rescued:', ' and '.join(map(str, people_on_ambulance)), 'taking time:', t,
-              ' with the ambulance ending at hospital', closest_hospital)
+              ' with the ambulance ending at hospital', end_hospital)
         return
 
 
@@ -184,20 +174,24 @@ def read_results(people, hospitals):
             print('!!! Ignored line: %r' % line, file=sys.stderr)
             continue
         try:
-            hospital = None
+            start_hospital, end_hospital = None, None
             people_rescued = []
             for (i, (w, num_ambulances)) in enumerate(p1.findall(line)):
                 hospital_match = p2.match(w)
                 if hospital_match:
                     # Hospital hospital_id:(x,y)
-                    if i != 0:
-                        raise FormatSyntaxError('Specify a person now: %r' % line)
                     (hospital_id, x, y) = list(map(int, hospital_match.groups()))
                     if hospital_id <= 0 or hospital_id > len(hospitals):
                         raise FormatSyntaxError(f'Illegal hospital id: {hospital_id}')
-                    hospital = hospitals[hospital_id - 1]
-                    if hospital.x != x or hospital.y != y:
-                        raise DataMismatchError(f'Hospital location mismatch: {hospital} != {hospital_id}: ({x},{y})')
+                    if i == 0:
+                        start_hospital = hospitals[hospital_id - 1]
+                        if start_hospital.x != x or start_hospital.y != y:
+                            raise DataMismatchError(f'Start Hospital location mismatch: {start_hospital} != {hospital_id}: ({x},{y})')
+                    else:
+                        end_hospital = hospitals[hospital_id - 1]
+                        if end_hospital.x != x or end_hospital.y != y:
+                            raise DataMismatchError(f'End Hospital location mismatch: {end_hospital} != {hospital_id}: ({x},{y})')
+
                     continue
                 person_match = p3.match(w)
                 if person_match:
@@ -215,10 +209,10 @@ def read_results(people, hospitals):
                 # error
                 raise FormatSyntaxError('Expected "n:(x,y)" or "n:(x,y,t)": %r' % line)
 
-            if not hospital or not people_rescued:
+            if not start_hospital or not people_rescued or not end_hospital:
                 print('!!! Insufficient data: %r' % line, file=sys.stderr)
                 continue
-            hospital.rescue(people_rescued, hospitals)
+            start_hospital.rescue(people_rescued, hospitals, end_hospital)
             score += len(people_rescued)
         except ValidationError as x:
             print('!!!', x, file=sys.stderr)
@@ -228,7 +222,7 @@ def read_results(people, hospitals):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print('usage: validator.py datafile resultfile') #resultfile is optional
+        print('usage: validator.py datafile resultfile')
         sys.exit(2)
     people_data, hospital_data = read_input_data(sys.argv[1])
     del sys.argv[1]

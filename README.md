@@ -18,15 +18,16 @@ Your code should output a result file that follows the format shown below. Pleas
 Hospital: <x>, <y>, <num_ambulances> 
 Hospital: <x>, <y>, <num_ambulances> 
 
-Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>) <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
-Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>) <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
-Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>) <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
+Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
+Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
+Ambulance: <hospital_id>: (<hospital_x>,<hospital_y>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <person_id>: (<person_x>,<person_y>,<person_rescue_time>), <hospital_id>: (<hospital_x>,<hospital_y>)
 ```
 
 You can run the validator with python 3:
 `python3 validator.py sample_data sample_result`
-Running this line should result in a total score of 26 and output showing who was rescued. 
-You can also try out running with `sample_wrong_result` to see the various kinds of error messages the validator produces.
+Running this line should result in a total score of 25 and output showing who was rescued. 
+You can also try out running with `sample_wrong_result` to see the various kinds of error messages the validator produces. 
+Or try `sample_data_2` and `sample_result_2` if you want to play with smaller amounts of data 
 
 ## How do I send in the code?
 Please send me (ns104@nyu.edu) a zip file by 12pm on Monday with your code and a shell script that compiles and runs your code.

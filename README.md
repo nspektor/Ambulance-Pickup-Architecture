@@ -1,6 +1,7 @@
 # Ambulance Pickup Problem Architecture
 ### Team Marshmallow (Nellie Spektor and Nehemiah Dureus)
 ns104@nyu.edu
+https://github.com/nspektor/Ambulance-Pickup-Architecture 
 
 ### Rules
 - It takes a minute to go one block either north-south or east-west. 

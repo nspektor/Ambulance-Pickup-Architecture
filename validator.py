@@ -77,6 +77,9 @@ class Hospital:
         return
 
     def choose_ambulance(self):
+        # pick the ambulance that has spent the least time taking trips
+        # a possible improvement to this architecture would be allowing the player to choose a specific ambulance.
+        # although I am not sure when a solver would want to do anything other than pick the freshest ambulance.
         return min(self.ambulances, key=lambda a: a.time)
 
     def rescue(self, people_on_ambulance, hospitals, end_hospital):
@@ -87,7 +90,6 @@ class Hospital:
         already_rescued = [p for p in people_on_ambulance if p.rescued]
         if already_rescued:
             raise IllegalPlanError('Person already rescued: %s' % already_rescued)
-        # t: time to take
         # note: we don't have to go back to the starting hospital
         time_for_this_trip = 0
         curr_location = self
@@ -150,8 +152,8 @@ def read_input_data(fname):
 def read_results(people, hospitals):
     print('Reading results...', file=sys.stderr)
     p1 = re.compile(r'(\d+\s*:\s*\(\s*\d+\s*,\s*\d+(\s*,\s*\d+)?\s*\))')
-    p2 = re.compile(r'(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)')
-    p3 = re.compile(r'(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)')
+    p2 = re.compile(r'(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)')  # hospital format
+    p3 = re.compile(r'(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)')  # person format
 
     score = 0
     hospital_index = 0
@@ -225,8 +227,6 @@ def read_results(people, hospitals):
                 print('!!! Insufficient data: %r' % line, file=sys.stderr)
                 continue
             start_hospital.rescue(people_to_rescue, hospitals, end_hospital)
-            # start_hospital.num_ambulances -= 1
-            # end_hospital.num_ambulances += 1
             score += len(people_to_rescue)
         except ValidationError as x:
             print('!!!', x, file=sys.stderr)
